@@ -1,0 +1,24 @@
+{
+  "name": "crawler-mangarock",
+  "version": "0.0.1",
+  "description": "Manga Rock Crawler",
+  "repository": "https://gitlab.com/aleistor/crawler-mangarock.git",
+  "author": "Stéphane (Bakeneko) Dupont <aleistor@gmail.com>",
+  "license": "Apache-2.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "lint": "standard --verbose | snazzy"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "snazzy": "^8.0.0",
+    "standard": "^12.0.1"
+  }
+}
