@@ -11,7 +11,10 @@
     "start": "node src/app.js",
     "lint": "standard --verbose | snazzy"
   },
-  "dependencies": {},
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  },
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
