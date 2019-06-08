@@ -1,5 +1,6 @@
 'use strict'
 const requestp = require('request-promise')
+const hash = require('object-hash')
 const utils = require('./utils')
 
 const baseUrl = 'https://api.mangarockhd.com'
@@ -14,6 +15,20 @@ class MangaRockCrawler {
   constructor (options) {
     options = options || {}
     this.userAgent = options.userAgent || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+    this.cache = options.cache
+  }
+
+  async getCachedData (key) {
+    if (this.cache && key) {
+      return this.cache.get(key)
+    }
+    return null
+  }
+
+  async setCachedData (key, value) {
+    if (this.cache && key) {
+      this.cache.set(key, value)
+    }
   }
 
   async getMangasForFilters (filters) {
@@ -31,18 +46,27 @@ class MangaRockCrawler {
       'User-Agent': this.userAgent
     }
 
-    // send request
-    const json = await requestp({
+    const req = {
       method: 'POST',
       uri: filterUrl,
       headers: headers,
       json: true,
       body: params
-    })
+    }
 
-    // check for error
-    if (json.code !== 0 || json.data === undefined) {
-      throw new Error('Error getting manga list for filters: code ' + json.code)
+    let cacheKey = this.cache ? hash(req) : null
+
+    // check cache if any
+    let json = await this.getCachedData(cacheKey)
+
+    if (!json) {
+      // send request
+      json = await requestp(req)
+      // check for error
+      if (json.code !== 0 || json.data === undefined) {
+        throw new Error('Error getting manga list for filters: code ' + json.code)
+      }
+      await this.setCachedData(cacheKey, json)
     }
 
     return json.data
@@ -57,18 +81,27 @@ class MangaRockCrawler {
       'User-Agent': this.userAgent
     }
 
-    // send request
-    const json = await requestp({
+    const req = {
       method: 'POST',
       uri: metaUrl,
       headers: headers,
       json: true,
       body: ids
-    })
+    }
 
-    // check for error
-    if (json.code !== 0 || json.data === undefined) {
-      throw new Error(`Error getting mangas data: code ${json.code}`)
+    let cacheKey = this.cache ? hash(req) : null
+
+    // check cache if any
+    let json = await this.getCachedData(cacheKey)
+
+    if (!json) {
+      // send request
+      json = await requestp(req)
+      // check for error
+      if (json.code !== 0 || json.data === undefined) {
+        throw new Error(`Error getting mangas data: code ${json.code}`)
+      }
+      await this.setCachedData(cacheKey, json)
     }
 
     // parse results
@@ -95,18 +128,27 @@ class MangaRockCrawler {
       'User-Agent': this.userAgent
     }
 
-    // send request
-    const json = await requestp({
+    const req = {
       method: 'POST',
       uri: metaUrl,
       headers: headers,
       json: true,
       body: ids
-    })
+    }
 
-    // check for error
-    if (json.code !== 0 || json.data === undefined) {
-      throw new Error(`Error getting authors data: code ${json.code}`)
+    let cacheKey = this.cache ? hash(req) : null
+
+    // check cache if any
+    let json = await this.getCachedData(cacheKey)
+
+    if (!json) {
+      // send request
+      json = await requestp(req)
+      // check for error
+      if (json.code !== 0 || json.data === undefined) {
+        throw new Error(`Error getting authors data: code ${json.code}`)
+      }
+      await this.setCachedData(cacheKey, json)
     }
 
     // parse results
@@ -130,18 +172,27 @@ class MangaRockCrawler {
       'User-Agent': this.userAgent
     }
 
-    // send request
-    const json = await requestp({
+    const req = {
       method: 'POST',
       uri: metaUrl,
       headers: headers,
       json: true,
       body: ids
-    })
+    }
 
-    // check for error
-    if (json.code !== 0 || json.data === undefined) {
-      throw new Error(`Error getting categories data: code ${json.code}`)
+    let cacheKey = this.cache ? hash(req) : null
+
+    // check cache if any
+    let json = await this.getCachedData(cacheKey)
+
+    if (!json) {
+      // send request
+      json = await requestp(req)
+      // check for error
+      if (json.code !== 0 || json.data === undefined) {
+        throw new Error(`Error getting categories data: code ${json.code}`)
+      }
+      await this.setCachedData(cacheKey, json)
     }
 
     // parse results
@@ -164,17 +215,26 @@ class MangaRockCrawler {
       'User-Agent': this.userAgent
     }
 
-    // send request
-    const json = await requestp({
+    const req = {
       method: 'GET',
       uri: releasesUrl,
       headers: headers,
       json: true
-    })
+    }
 
-    // check for error
-    if (json.code !== 0 || json.data === undefined) {
-      throw new Error(`Error getting manga releases: code ${json.code}`)
+    let cacheKey = this.cache ? hash(req) : null
+
+    // check cache if any
+    let json = await this.getCachedData(cacheKey)
+
+    if (!json) {
+      // send request
+      json = await requestp(req)
+      // check for error
+      if (json.code !== 0 || json.data === undefined) {
+        throw new Error(`Error getting manga releases: code ${json.code}`)
+      }
+      await this.setCachedData(cacheKey, json)
     }
 
     // parse results
@@ -254,18 +314,27 @@ class MangaRockCrawler {
       'User-Agent': this.userAgent
     }
 
-    // send request
-    const json = await requestp({
+    const req = {
       method: 'POST',
       uri: mangaUrl,
       headers: headers,
       json: true,
       body: params
-    })
+    }
 
-    // check for error
-    if (json.code !== 0 || json.data === undefined || json.data[id] === undefined) {
-      throw new Error(`Error getting manga data: code ${json.code}`)
+    let cacheKey = this.cache ? hash(req) : null
+
+    // check cache if any
+    let json = await this.getCachedData(cacheKey)
+
+    if (!json) {
+      // send request
+      json = await requestp(req)
+      // check for error
+      if (json.code !== 0 || json.data === undefined || json.data[id] === undefined) {
+        throw new Error(`Error getting manga data: code ${json.code}`)
+      }
+      await this.setCachedData(cacheKey, json)
     }
 
     const now = new Date().getTime() / 1000
